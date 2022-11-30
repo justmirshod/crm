@@ -1,17 +1,40 @@
 import search_icon from "../../assets/search 1.png";
 import { useSelector, useDispatch } from "react-redux/es/exports";
 import { setFilter, setSearch } from "./student_slice";
+import { createSelector } from "reselect";
+import StudentListItem from "../StudentListItem/StudentListItem";
 
 export default function StudentList() {
-  const { data } = useSelector((state) => state.students);
-  console.log(data);
+  const { data, activeFilter } = useSelector((state) => state.students);
+  const dispatch = useDispatch();
+
+  const selectedFilters = createSelector(
+    (state) => state.students.activeFilter,
+    (state) => state.students.data,
+    (activeFilter, data) => {
+      if (activeFilter === "all") {
+        return data;
+      } else {
+        return data.filter((item) => item.status === activeFilter);
+      }
+    }
+  );
+
+  const visiblePosts = useSelector(selectedFilters);
 
   return (
-    <div className="list bg-default p-3 mt-10 rounded-2xl shadow-md">
+    <div className="list bg-default p-6 mt-10 rounded-xl shadow-md">
       <div className="list-header flex items-center justify-between mb-3">
         <div>
           <h1 className="text-dark font-bold text-xl">Hamma o'quvchilar</h1>
-          <span className="text-sm text-light_green">Faol o'quvchilar</span>
+          <span className="text-sm text-light_green">
+            {activeFilter === "all"
+              ? "Hamma"
+              : activeFilter === "active"
+              ? "Faol"
+              : "Nofaol"}{" "}
+            o'quvchilar
+          </span>
         </div>
         <div className="flex items-center">
           <div className="flex items-center bg-light_white rounded-xl  mr-2 p-2 ">
@@ -24,8 +47,19 @@ export default function StudentList() {
           </div>
           <div className="flex items-center bg-light_white rounded-xl p-2">
             <span className="text-light_gray w-[120px]">Short Status:</span>
-            <select name="" id="" className="bg-light_white outline-none">
-              <option value="0">Faol</option>
+            <select
+              name=""
+              id=""
+              value={activeFilter}
+              className="bg-light_white outline-none"
+              onChange={(e) => {
+                console.log(e.target.value);
+                dispatch(setFilter(e.target.value));
+              }}
+            >
+              <option value="all">Hammasi</option>
+              <option value="active">Faol</option>
+              <option value="inactive">Nofaol</option>
             </select>
           </div>
         </div>
@@ -43,21 +77,40 @@ export default function StudentList() {
             </tr>
           </thead>
           <tbody>
-            {data.map((item, index) => (
-              <tr
-                key={item.name}
-                className={index === data.length - 1 ? null : "border-b"}
-              >
-                <td className="py-4">{item.name}</td>
-                <td>{item.main}</td>
-                <td>{item.phoneNumber}</td>
-                <td>{item.payment}</td>
-                <td>{item.group}</td>
-                <td>{item.status}</td>
-              </tr>
+            {visiblePosts.map((item, index) => (
+              <StudentListItem
+                key={index}
+                item={item}
+                index={index}
+                data={visiblePosts}
+              />
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="list-footer flex items-center mt-8 justify-end">
+        <button className="border p-1 bg-light_white inline-block w-[30px] h-[30px] mr-2 rounded-md">
+          {"<"}
+        </button>
+        <button className="border p-1 bg-main text-default inline-block w-[30px] h-[30px] mr-2 rounded-md">
+          1
+        </button>
+        <button className="border p-1 bg-light_white inline-block w-[30px] h-[30px] mr-2 rounded-md">
+          2
+        </button>
+        <button className="border p-1 bg-light_white inline-block w-[30px] h-[30px] mr-2 rounded-md">
+          3
+        </button>
+        <button className="border p-1 bg-light_white inline-block w-[30px] h-[30px] mr-2 rounded-md">
+          4
+        </button>
+        <span>...</span>
+        <button className="border p-1 bg-light_white inline-block w-[30px] h-[30px] mr-2 rounded-md">
+          40
+        </button>
+        <button className="border p-1 bg-light_white inline-block w-[30px] h-[30px] mr-2 rounded-md">
+          {">"}
+        </button>
       </div>
     </div>
   );

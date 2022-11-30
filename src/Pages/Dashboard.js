@@ -4,7 +4,7 @@ import PieChart from "../Components/Charts/Pie";
 
 export default function Dashboard() {
   return (
-    <div className=" w-4/5 py-5 px-16 bg-light_white">
+    <div className=" w-4/5 ml-auto py-5 px-16 bg-light_white">
       <Navbar />
       <div className="flex mt-20 items-center justify-between">
         <div className="w-2/3 bg-default px-10 pt-8 pb-10  rounded-xl shadow-lg relative">

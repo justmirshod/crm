@@ -2,11 +2,16 @@ import dark_icon from "../../assets/Vector (2).png";
 import add_icon from "../../assets/Add.png";
 import group_icon from "../../assets/Group.png";
 import search_icon from "../../assets/search 1.png";
+import { useSelector } from "react-redux";
 export default function Navbar() {
+  const { activeUser } = useSelector((state) => state.pages);
+
   return (
     <div className="navbar bg-none flex items-center justify-between">
       <div className="name">
-        <span className="text-dark text-xl font-semibold">Salom Sheroz 👋🏼</span>
+        <span className="text-dark text-xl font-semibold">
+          Salom {activeUser.first_name} 👋🏼
+        </span>
       </div>
       <div className="icons-part flex items-center">
         <img src={dark_icon} alt="dark" className="mr-3" />

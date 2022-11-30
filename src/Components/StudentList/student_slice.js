@@ -35,6 +35,7 @@ const initialState = {
       status: "active",
     },
   ],
+  activeFilter: "all",
 };
 
 export const studentSlice = createSlice({
@@ -46,8 +47,7 @@ export const studentSlice = createSlice({
       state.data = newData;
     },
     setFilter: (state, { payload }) => {
-      const newData = state.data.filter((item) => item.status === payload);
-      state.data = newData;
+      state.activeFilter = payload;
     },
   },
 });
